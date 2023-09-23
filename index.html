@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <script src="./lib/jquery_3.7.1_jquery.min.js"></script>
+        <script src="./lib/numjs_0.14.2_numjs.min.js"></script>
+        <script src="./lib/onnxjs_0.1.7_onnx.min.js"></script>
+        <script src="./lib/jimp_0.22.10_jimp.min.js"></script>
+        <script src="./cpp/number_extractor.js"></script>
+    </head>
+    <body>
+        <script>
+            // 訓練済みモデルファイルのパス
+            const ONNX_PATH = './training/output/2c_202309240257.onnx';
+        </script>
+        <script type="module" src="./js/main.js"></script>
+        <input type="file" id="imageFileInput" accept=".jpg, .jpeg, .png, .bmp, .jfif">
+        <br>
+        <canvas id="imageCanvas" width="640" height="360"></canvas>
+        <br>
+        <div id="result"></div>
+    </body>
+</html>
