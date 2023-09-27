@@ -14,8 +14,7 @@
         <script type="module">
         import {
             initSession,
-            recognize, 
-            getAnswerFromLogitsList,
+            recognizeFromFile, 
         } from 'https://noamoa16.github.io/pikmin-score-recognizer/js/recognize.js';
         
         let file = null;
@@ -40,30 +39,14 @@
             // ファイルが空でなければ
             if(file){
                 $('#result').html('処理中…');
-
-                // 画像読み込み
-                const url = URL.createObjectURL(file);
-                Jimp.read(url).then(image => {
-                    /** @type {Uint8Array} */
-                    const imageArray = image.bitmap.data; // 縦 * 横 * RGBA
-                    /** @type {number} */
-                    const height = image.bitmap.height;
-                    /** @type {number} */
-                    const width = image.bitmap.width;
-                    const channels = 4;
-                    const mode = '2c'; // 現在はピクミン2チャレンジモードにのみ対応
-
-                    // スコア認識
-                    recognize(session, imageArray, height, width, channels, mode).then(result => {
-                        // スコアを求める
-                        const answer = getAnswerFromLogitsList(result.logitsList); 
-                        console.log(answer);
-                        $('#result').html(answer);
-                    })
-                    .catch(e => {
-                        $('#result').html(`スコア認識に失敗しました<br>${e}`);
-                        console.log(e);
-                    });
+                const mode = '2c'; // 現在はピクミン2チャレンジモードにのみ対応
+                recognizeFromFile(session, file, mode).then(answer => {
+                    console.log(answer);
+                    $('#result').html(answer);
+                })
+                .catch(e => {
+                    $('#result').html(`スコア認識に失敗しました<br>${e}`);
+                    console.log(e);
                 });
             }
         });

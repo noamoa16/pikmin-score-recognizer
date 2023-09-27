@@ -85,3 +85,27 @@ export function getAnswerFromLogitsList(logitsList){
     }
     return parseInt(answerList.join(''));
 }
+
+/**
+ * リザルト画面の画像ファイルを受け取って、スコアを返す
+ * @param {File} file 
+ * @param {string} mode
+ * @returns {number}　
+ */
+export async function recognizeFromFile(session, file, mode){
+    // 画像読み込み
+    const url = URL.createObjectURL(file);
+    const image = await Jimp.read(url);
+    /** @type {Uint8Array} */
+    const imageArray = image.bitmap.data; // 縦 * 横 * RGBA
+    /** @type {number} */
+    const height = image.bitmap.height;
+    /** @type {number} */
+    const width = image.bitmap.width;
+    const channels = 4;
+
+    // スコア認識
+    const result = await recognize(session, imageArray, height, width, channels, mode);
+    const answer = getAnswerFromLogitsList(result.logitsList); 
+    return answer;
+}
