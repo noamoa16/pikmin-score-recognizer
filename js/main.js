@@ -50,7 +50,7 @@ async function main(){
             // ファイルが空でなければ
             if(file){
                 const startTime = performance.now();
-                $('#result').html('検出中…');
+                $('#result').html('処理中…');
                 
                 // 画面に画像を表示
                 const CANVAS_HEIGHT = 360;
