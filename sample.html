@@ -17,7 +17,7 @@
             recognizeFromFile, 
         } from 'https://noamoa16.github.io/pikmin-score-recognizer/js/recognize.js';
         
-        let file = null;
+        /** @type {File | null} */ let file = null;
         let session = null;
         
         // 訓練済みモデルの初期化
@@ -28,8 +28,7 @@
         init(ONNX_PATH);
 
         // ファイルが選択されたとき
-        $('#imageFileInput').on('change', e => {
-            /** @type {File} */
+        $('#imageFileInput').on('change', e => {  
             file = e.target.files[0];
             $('#recognizeButton').prop('disabled', !file);
             $('#result').html('');
