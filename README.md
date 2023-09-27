@@ -40,12 +40,7 @@
 
 ### 他のウェブアプリでスコア認識プログラムを使用する場合
 
-このレポジトリをクローンしてください。
-
-`training/data`フォルダは容量が大きいため、モデルを訓練しない場合は削除するか、`.gitignore`に追加して構いません。
-
-[index.html](index.html)と[js/main.js](js/main.js)を書き換えてください。
-ディレクトリ構造を変える場合は、[index.html](index.html)内のパス(`script`タグの`src`と、変数`ONNX_PATH`)を適切に書き換える必要があります。
+[sample.html](sample.html)を適切に書き換えてください。
 
 ### ローカル上でのスコア認識の実行
 

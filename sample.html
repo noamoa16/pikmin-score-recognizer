@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+        <!-- ライララリ(他の箇所で読み込んでいるなら削除してください) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://noamoa16.github.io/pikmin-score-recognizer/lib/numjs_0.14.2_numjs.min.js"></script>
+        <script src="https://noamoa16.github.io/pikmin-score-recognizer/lib/onnxjs_0.1.7_onnx.min.js"></script>
+        <script src="https://noamoa16.github.io/pikmin-score-recognizer/lib/jimp_0.22.10_jimp.min.js"></script>
+
+        <script src="https://noamoa16.github.io/pikmin-score-recognizer/cpp/number_extractor.js"></script>
+    </head>
+    <body>
+        <script>
+            
+        </script>
+        <script type="module">
+        import {
+            initSession,
+            recognize, 
+            getAnswerFromLogitsList,
+        } from 'https://noamoa16.github.io/pikmin-score-recognizer/js/recognize.js';
+        
+        let file = null;
+        let session = null;
+        
+        // 訓練済みモデルの初期化
+        const ONNX_PATH = 'https://noamoa16.github.io/pikmin-score-recognizer/training/output/2c_202309240257.onnx';
+        async function init(onnxPath){
+            session = await initSession(onnxPath);
+        }
+        init(ONNX_PATH);
+
+        // ファイルが選択されたとき
+        $('#imageFileInput').on('change', e => {
+            /** @type {File} */
+            file = e.target.files[0];
+            $('#recognizeButton').prop('disabled', !file);
+            $('#result').html('');
+        });
+
+        $('#recognizeButton').on('click', e => {
+            // ファイルが空でなければ
+            if(file){
+                const startTime = performance.now();
+                $('#result').html('処理中…');
+
+                // 画像読み込み
+                const url = URL.createObjectURL(file);
+                Jimp.read(url).then(image => {
+                    const imageLoadEndTime = performance.now();
+                    /** @type {Uint8Array} */
+                    const imageArray = image.bitmap.data; // 縦 * 横 * RGBA
+                    /** @type {number} */
+                    const height = image.bitmap.height;
+                    /** @type {number} */
+                    const width = image.bitmap.width;
+                    const channels = 4;
+                    const mode = '2c'; // 現在はピクミン2チャレンジモードにのみ対応
+
+                    // スコア認識
+                    recognize(session, imageArray, height, width, channels, mode).then(result => {
+                        // スコアを求める
+                        const answer = getAnswerFromLogitsList(result.logitsList); 
+                        console.log(answer);
+                        $('#result').html(answer);
+                    })
+                    .catch(e => {
+                        $('#result').html(`スコア認識に失敗しました<br>${e}`);
+                        console.log(e);
+                    });
+                });
+            }
+        });
+        </script>
+        <input type="file" id="imageFileInput" accept=".jpg, .jpeg, .png, .bmp, .jfif">
+        <br>
+        <button id="recognizeButton" disabled>スコア認識</button>
+        <br>
+        <div id="result"></div>
+    </body>
+</html>
