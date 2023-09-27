@@ -11,9 +11,6 @@
         <script src="https://noamoa16.github.io/pikmin-score-recognizer/cpp/number_extractor.js"></script>
     </head>
     <body>
-        <script>
-            
-        </script>
         <script type="module">
         import {
             initSession,
@@ -42,13 +39,11 @@
         $('#recognizeButton').on('click', e => {
             // ファイルが空でなければ
             if(file){
-                const startTime = performance.now();
                 $('#result').html('処理中…');
 
                 // 画像読み込み
                 const url = URL.createObjectURL(file);
                 Jimp.read(url).then(image => {
-                    const imageLoadEndTime = performance.now();
                     /** @type {Uint8Array} */
                     const imageArray = image.bitmap.data; // 縦 * 横 * RGBA
                     /** @type {number} */
